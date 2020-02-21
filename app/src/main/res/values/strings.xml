@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GpsApp</string>
+    <string name="azimuth">Азимут</string>
+    <string name="azimuth_inv">Обратный азимут</string>
+    <string name="distance">Расстояние</string>
+    <string name="lat">Широта</string>
+    <string name="lon">Долгота</string>
 </resources>
