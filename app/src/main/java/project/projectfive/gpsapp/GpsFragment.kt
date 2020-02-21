@@ -42,6 +42,8 @@ class GpsFragment: Fragment(){
     lateinit var bButton:MaterialButton
     lateinit var bLat:TextView
     lateinit var bLon:TextView
+    lateinit var az:TextView
+    lateinit var dist:TextView
 
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     private val INTERVAL: Long = 2000
@@ -86,43 +88,51 @@ class GpsFragment: Fragment(){
         aLon = view.findViewById(R.id.lon1)
         bLat = view.findViewById(R.id.lat2)
         bLon = view.findViewById(R.id.lon2)
+        az = view.findViewById(R.id.az)
+        dist = view.findViewById(R.id.dist)
         aButton.setOnClickListener {
-            gpsViewModel.setPointA((txtLat.text as String).toFloat(), (txtLong.text as String).toFloat())
+            gpsViewModel.setPointA((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble())
         }
         bButton.setOnClickListener {
-            gpsViewModel.setPointB((txtLat.text as String).toFloat(), (txtLong.text as String).toFloat())
+            gpsViewModel.setPointB((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble())
         }
-        val latAObserver = Observer<Float>{data ->
+        val latAObserver = Observer<Double>{data ->
             aLat.text = data.toString()
         }
-        val lonAObserver = Observer<Float>{data ->
+        val lonAObserver = Observer<Double>{data ->
             aLon.text = data.toString()
         }
-        val latBObserver = Observer<Float>{data ->
+        val latBObserver = Observer<Double>{data ->
             bLat.text = data.toString()
         }
-        val lonBObserver = Observer<Float>{data ->
+        val lonBObserver = Observer<Double>{data ->
             bLon.text = data.toString()
+        }
+        val azObserver = Observer<Double>{data ->
+            az.text = data.toString()
+        }
+        val distObserver = Observer<Double>{data ->
+            dist.text = data.toString()
         }
         gpsViewModel.latA.observe(viewLifecycleOwner, latAObserver)
         gpsViewModel.lonA.observe(viewLifecycleOwner, lonAObserver)
         gpsViewModel.latB.observe(viewLifecycleOwner, latBObserver)
         gpsViewModel.lonB.observe(viewLifecycleOwner, lonBObserver)
-
-
+        gpsViewModel.az.observe(viewLifecycleOwner,azObserver)
+        gpsViewModel.distance.observe(viewLifecycleOwner,distObserver)
         return view
     }
 
     private fun buildAlertMessageNoGps() {
 
         val builder = AlertDialog.Builder(activity as MainActivity)
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        builder.setMessage("Похоже местоположение отключено, включить?")
             .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
+            .setPositiveButton("Да") { dialog, id ->
                 startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     , 11)
             }
-            .setNegativeButton("No") { dialog, id ->
+            .setNegativeButton("Нет") { dialog, id ->
                 dialog.cancel()
                 activity?.finish()
             }
