@@ -5,4 +5,6 @@
     <string name="distance">Расстояние</string>
     <string name="lat">Широта</string>
     <string name="lon">Долгота</string>
+    <string name="altitude">Высота</string>
+    <string name="update">Обновлено</string>
 </resources>

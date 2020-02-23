@@ -35,6 +35,7 @@ class GpsFragment: Fragment(){
     lateinit var txtLat: TextView
     lateinit var txtLong: TextView
     lateinit var txtTime: TextView
+    lateinit var txtAlt: TextView
 
     lateinit var aButton:MaterialButton
     lateinit var aLat:TextView
@@ -72,6 +73,7 @@ class GpsFragment: Fragment(){
         txtLat = view.findViewById(R.id.txtLat);
         txtLong = view.findViewById(R.id.txtLong);
         txtTime = view.findViewById(R.id.txtTime);
+        txtAlt = view.findViewById(R.id.txtAlt);
 
         val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -120,6 +122,8 @@ class GpsFragment: Fragment(){
         gpsViewModel.lonB.observe(viewLifecycleOwner, lonBObserver)
         gpsViewModel.az.observe(viewLifecycleOwner,azObserver)
         gpsViewModel.distance.observe(viewLifecycleOwner,distObserver)
+
+
         return view
     }
 
@@ -181,9 +185,11 @@ class GpsFragment: Fragment(){
         mLastLocation = location
         val date: Date = Calendar.getInstance().time
         val sdf = SimpleDateFormat("hh:mm:ss a")
-        txtTime.text = "ОБНОВЛЕНО : " + sdf.format(date)
+        txtTime.text = "" + sdf.format(date)
         txtLat.text = "" + mLastLocation.latitude
         txtLong.text = "" + mLastLocation.longitude
+        txtAlt.text = "" + mLastLocation.altitude
+
 
         // You can now create a LatLng Object for use with maps
     }
