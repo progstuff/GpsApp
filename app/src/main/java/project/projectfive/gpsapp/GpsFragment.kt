@@ -40,10 +40,13 @@ class GpsFragment: Fragment(){
     lateinit var aButton:MaterialButton
     lateinit var aLat:TextView
     lateinit var aLon:TextView
+    lateinit var aAlt:TextView
     lateinit var bButton:MaterialButton
     lateinit var bLat:TextView
     lateinit var bLon:TextView
+    lateinit var bAlt:TextView
     lateinit var az:TextView
+    lateinit var iaz:TextView
     lateinit var dist:TextView
 
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
@@ -54,6 +57,7 @@ class GpsFragment: Fragment(){
     private val REQUEST_PERMISSION_LOCATION = 10
 
     lateinit var gpsViewModel:GpsViewModel
+    var coordsExist = false
 
     companion object {
         fun newInstance(): GpsFragment {
@@ -88,15 +92,20 @@ class GpsFragment: Fragment(){
         bButton = view.findViewById(R.id.bb)
         aLat = view.findViewById(R.id.lat1)
         aLon = view.findViewById(R.id.lon1)
+        aAlt = view.findViewById(R.id.alt1)
         bLat = view.findViewById(R.id.lat2)
         bLon = view.findViewById(R.id.lon2)
+        bAlt = view.findViewById(R.id.alt2)
         az = view.findViewById(R.id.az)
+        iaz = view.findViewById(R.id.az_inv)
         dist = view.findViewById(R.id.dist)
         aButton.setOnClickListener {
-            gpsViewModel.setPointA((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble())
+            if(coordsExist)
+                gpsViewModel.setPointA((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble(), (txtAlt.text as String).toDouble())
         }
         bButton.setOnClickListener {
-            gpsViewModel.setPointB((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble())
+            if(coordsExist)
+                gpsViewModel.setPointB((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble(), (txtAlt.text as String).toDouble())
         }
         val latAObserver = Observer<Double>{data ->
             aLat.text = data.toString()
@@ -110,17 +119,29 @@ class GpsFragment: Fragment(){
         val lonBObserver = Observer<Double>{data ->
             bLon.text = data.toString()
         }
+        val altBObserver = Observer<Double>{data ->
+            bAlt.text = data.toString()
+        }
+        val altAObserver = Observer<Double>{data ->
+            aAlt.text = data.toString()
+        }
         val azObserver = Observer<Double>{data ->
             az.text = data.toString()
+        }
+        val iazObserver = Observer<Double>{data ->
+            iaz.text = data.toString()
         }
         val distObserver = Observer<Double>{data ->
             dist.text = data.toString()
         }
         gpsViewModel.latA.observe(viewLifecycleOwner, latAObserver)
         gpsViewModel.lonA.observe(viewLifecycleOwner, lonAObserver)
+        gpsViewModel.altA.observe(viewLifecycleOwner, altAObserver)
         gpsViewModel.latB.observe(viewLifecycleOwner, latBObserver)
         gpsViewModel.lonB.observe(viewLifecycleOwner, lonBObserver)
+        gpsViewModel.altB.observe(viewLifecycleOwner, altBObserver)
         gpsViewModel.az.observe(viewLifecycleOwner,azObserver)
+        gpsViewModel.iaz.observe(viewLifecycleOwner,iazObserver)
         gpsViewModel.distance.observe(viewLifecycleOwner,distObserver)
 
 
@@ -189,8 +210,7 @@ class GpsFragment: Fragment(){
         txtLat.text = "" + mLastLocation.latitude
         txtLong.text = "" + mLastLocation.longitude
         txtAlt.text = "" + mLastLocation.altitude
-
-
+        coordsExist = true
         // You can now create a LatLng Object for use with maps
     }
 
