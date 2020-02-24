@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container,fragment)
                 .commit()
         }
+
+
     }
 
 

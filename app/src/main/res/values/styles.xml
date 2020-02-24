@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -14,5 +14,13 @@
         <item name="android:textSize">16sp</item>
         <item name="cornerRadius">8dp</item>
     </style>
+
+    <style name="UsualText" parent="android:Widget.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+
 
 </resources>

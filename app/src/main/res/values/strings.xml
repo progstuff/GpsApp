@@ -7,4 +7,7 @@
     <string name="lon">Долгота</string>
     <string name="altitude">Высота</string>
     <string name="update">Обновлено</string>
+    <string name="wait">"???"</string>
+    <string name="elev">Превышение</string>
+    <string name="elev_deg">Превышение град</string>
 </resources>

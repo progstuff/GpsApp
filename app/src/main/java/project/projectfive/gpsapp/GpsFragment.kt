@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.GnssNavigationMessage
+import android.location.GnssStatus
 import android.location.Location
 
 import android.os.Bundle
@@ -20,6 +22,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.location.*
 import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -48,6 +51,9 @@ class GpsFragment: Fragment(){
     lateinit var az:TextView
     lateinit var iaz:TextView
     lateinit var dist:TextView
+    lateinit var e:TextView
+    lateinit var edeg:TextView
+    lateinit var satelite:TextView
 
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     private val INTERVAL: Long = 2000
@@ -65,6 +71,7 @@ class GpsFragment: Fragment(){
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,10 +81,8 @@ class GpsFragment: Fragment(){
         gpsViewModel = ViewModelProviders.of(this).get(GpsViewModel::class.java)
         mLocationRequest = LocationRequest()
 
-        txtLat = view.findViewById(R.id.txtLat);
-        txtLong = view.findViewById(R.id.txtLong);
-        txtTime = view.findViewById(R.id.txtTime);
-        txtAlt = view.findViewById(R.id.txtAlt);
+
+        getUIElements(view)
 
         val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -85,8 +90,51 @@ class GpsFragment: Fragment(){
         }
 
         if (checkPermissionForLocation(activity as MainActivity)) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                locationManager.registerGnssStatusCallback(object: GnssStatus.Callback(){
+                    override fun onStarted() {
+                        super.onStarted()
+
+                    }
+
+                    override fun onSatelliteStatusChanged(status: GnssStatus?) {
+                        super.onSatelliteStatusChanged(status)
+                        satelite.text = status?.satelliteCount.toString()
+                        Log.d("GPS","GPS DATA")
+                    }
+                })
+            } else {
+                //GpsSate
+            }
             startLocationUpdates()
         }
+
+        updateModel()
+
+        updateUI()
+
+
+        return view
+    }
+
+    private fun updateModel(){
+        aButton.setOnClickListener {
+            if(coordsExist)
+                gpsViewModel.setPointA((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble(), (txtAlt.text as String).toDouble())
+        }
+        bButton.setOnClickListener {
+            if(coordsExist)
+                gpsViewModel.setPointB((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble(), (txtAlt.text as String).toDouble())
+        }
+    }
+
+    private fun getUIElements(view:View){
+        txtLat = view.findViewById(R.id.txtLat);
+        txtLong = view.findViewById(R.id.txtLong);
+        txtTime = view.findViewById(R.id.txtTime);
+        txtAlt = view.findViewById(R.id.txtAlt);
+        satelite = view.findViewById(R.id.satelites_count)
 
         aButton = view.findViewById(R.id.ba)
         bButton = view.findViewById(R.id.bb)
@@ -99,53 +147,48 @@ class GpsFragment: Fragment(){
         az = view.findViewById(R.id.az)
         iaz = view.findViewById(R.id.az_inv)
         dist = view.findViewById(R.id.dist)
-        aButton.setOnClickListener {
-            if(coordsExist)
-                gpsViewModel.setPointA((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble(), (txtAlt.text as String).toDouble())
+        e = view.findViewById(R.id.elev)
+        edeg = view.findViewById(R.id.elev_deg)
+    }
+
+    private fun updateUI(){
+        val pointAObserver = Observer<LocationData>{data ->
+            if(data.isExist) {
+                aLat.text = "%.7f".format(data.lat).replace(",", ".")
+                aLon.text = "%.7f".format(data.lon).replace(",", ".")
+                aAlt.text = "%.2f".format(data.alt).replace(",", ".")
+            }
         }
-        bButton.setOnClickListener {
-            if(coordsExist)
-                gpsViewModel.setPointB((txtLat.text as String).toDouble(), (txtLong.text as String).toDouble(), (txtAlt.text as String).toDouble())
+        val pointBObserver = Observer<LocationData>{data ->
+            if(data.isExist) {
+                bLat.text = "%.7f".format(data.lat).replace(",", ".")
+                bLon.text = "%.7f".format(data.lon).replace(",", ".")
+                bAlt.text = "%.2f".format(data.alt).replace(",", ".")
+            }
         }
-        val latAObserver = Observer<Double>{data ->
-            aLat.text = data.toString()
-        }
-        val lonAObserver = Observer<Double>{data ->
-            aLon.text = data.toString()
-        }
-        val latBObserver = Observer<Double>{data ->
-            bLat.text = data.toString()
-        }
-        val lonBObserver = Observer<Double>{data ->
-            bLon.text = data.toString()
-        }
-        val altBObserver = Observer<Double>{data ->
-            bAlt.text = data.toString()
-        }
-        val altAObserver = Observer<Double>{data ->
-            aAlt.text = data.toString()
-        }
+
         val azObserver = Observer<Double>{data ->
-            az.text = data.toString()
+            az.text = "%.2f".format(data).replace(",",".")
         }
         val iazObserver = Observer<Double>{data ->
-            iaz.text = data.toString()
+            iaz.text = "%.2f".format(data).replace(",",".")
         }
         val distObserver = Observer<Double>{data ->
-            dist.text = data.toString()
+            dist.text = "%.2f".format(data).replace(",",".")
         }
-        gpsViewModel.latA.observe(viewLifecycleOwner, latAObserver)
-        gpsViewModel.lonA.observe(viewLifecycleOwner, lonAObserver)
-        gpsViewModel.altA.observe(viewLifecycleOwner, altAObserver)
-        gpsViewModel.latB.observe(viewLifecycleOwner, latBObserver)
-        gpsViewModel.lonB.observe(viewLifecycleOwner, lonBObserver)
-        gpsViewModel.altB.observe(viewLifecycleOwner, altBObserver)
+        val eObserver = Observer<Double>{data ->
+            e.text = "%.2f".format(data).replace(",",".")
+        }
+        val eDegObserver = Observer<Double>{data ->
+            edeg.text = "%.2f".format(data).replace(",",".")
+        }
+        gpsViewModel.pointA.observe(viewLifecycleOwner, pointAObserver)
+        gpsViewModel.pointB.observe(viewLifecycleOwner, pointBObserver)
         gpsViewModel.az.observe(viewLifecycleOwner,azObserver)
         gpsViewModel.iaz.observe(viewLifecycleOwner,iazObserver)
         gpsViewModel.distance.observe(viewLifecycleOwner,distObserver)
-
-
-        return view
+        gpsViewModel.e.observe(viewLifecycleOwner,eObserver)
+        gpsViewModel.edeg.observe(viewLifecycleOwner,eDegObserver)
     }
 
     private fun buildAlertMessageNoGps() {
@@ -189,6 +232,7 @@ class GpsFragment: Fragment(){
         if (ActivityCompat.checkSelfPermission(activity as MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity as MainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return
         }
+
         mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
             Looper.myLooper())
     }
@@ -207,9 +251,10 @@ class GpsFragment: Fragment(){
         val date: Date = Calendar.getInstance().time
         val sdf = SimpleDateFormat("hh:mm:ss a")
         txtTime.text = "" + sdf.format(date)
-        txtLat.text = "" + mLastLocation.latitude
-        txtLong.text = "" + mLastLocation.longitude
-        txtAlt.text = "" + mLastLocation.altitude
+        
+        txtLat.text = "%.7f".format(mLastLocation.latitude).replace(",",".")
+        txtLong.text = "%.7f".format(mLastLocation.longitude).replace(",",".")
+        txtAlt.text = "%.2f".format(mLastLocation.altitude).replace(",",".")
         coordsExist = true
         // You can now create a LatLng Object for use with maps
     }
@@ -224,7 +269,7 @@ class GpsFragment: Fragment(){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates()
             } else {
-                Toast.makeText(activity, "Permission Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "В доступе отказано", Toast.LENGTH_SHORT).show()
             }
         }
     }
