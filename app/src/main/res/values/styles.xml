@@ -24,7 +24,7 @@
     <style name="TitleText" parent="android:Widget.TextView">
         <item name="android:textSize">22sp</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColor">@color/colorTitle</item>
     </style>
 
 

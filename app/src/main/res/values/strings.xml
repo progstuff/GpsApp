@@ -14,4 +14,5 @@
     <string name="calculated_data">Расчётные показатели</string>
     <string name="pointA">Координаты точки А</string>
     <string name="pointB">Координаты точки Б</string>
+    <string name="memory">Запомнить</string>
 </resources>

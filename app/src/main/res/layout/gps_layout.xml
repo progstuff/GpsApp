@@ -48,8 +48,9 @@
                             android:layout_marginEnd="8dp"
                             android:text="@string/wait"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="@+id/txtLong"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
                         <TextView
                             android:id="@+id/txtLong"
@@ -150,6 +151,19 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/txtTime" />
+
+                        <TextView
+                            android:id="@+id/textView21"
+                            style="@style/TitleText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="@string/gps_data"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -181,7 +195,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="@+id/alt1"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
                         <TextView
                             android:id="@+id/lon1"
@@ -205,7 +219,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Точка А"
+                            android:text="@string/memory"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.498"
@@ -258,6 +272,19 @@
                             app:layout_constraintStart_toEndOf="@+id/textView10"
                             app:layout_constraintTop_toBottomOf="@+id/lon1" />
 
+                        <TextView
+                            android:id="@+id/textView20"
+                            style="@style/TitleText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="@string/pointA"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -287,8 +314,9 @@
                             android:layout_marginEnd="8dp"
                             android:text="@string/wait"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="@+id/lon2"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
                         <TextView
                             android:id="@+id/lon2"
@@ -312,7 +340,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Точка Б"
+                            android:text="@string/memory"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -325,10 +353,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
                             android:text="@string/lat"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="@+id/lat2" />
 
                         <TextView
                             android:id="@+id/textView12"
@@ -358,10 +385,24 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:text="@string/wait"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/lon2"
                             app:layout_constraintTop_toBottomOf="@+id/lon2" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            style="@style/TitleText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="@string/pointB"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -386,10 +427,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
                             android:text="@string/azimuth"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="@+id/az" />
 
                         <TextView
                             android:id="@+id/az"
@@ -400,8 +440,9 @@
                             android:layout_marginEnd="8dp"
                             android:text="@string/wait"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="@+id/az_inv"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
                         <TextView
                             android:id="@+id/textView3"
@@ -490,10 +531,24 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:text="@string/wait"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/elev"
                             app:layout_constraintTop_toBottomOf="@+id/elev" />
+
+                        <TextView
+                            android:id="@+id/textView23"
+                            style="@style/TitleText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="@string/calculated_data"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 

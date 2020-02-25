@@ -61,6 +61,9 @@ class GpsViewModel: ViewModel() {
                 this.az.value = az
                 iaz.value = (az + 180.0) % 360
             }
+        } else {
+            this.az.value = 361.0
+            iaz.value = 361.0
         }
 
     }
@@ -84,6 +87,8 @@ class GpsViewModel: ViewModel() {
                 val dist = sigma * 6372795
                 distance.value = dist
             }
+        } else {
+            distance.value = -1.0
         }
     }
 
@@ -96,6 +101,9 @@ class GpsViewModel: ViewModel() {
                 if(distance.value as Double > 0)
                     edeg.value = atan((a2-a1)/(distance.value) as Double)/PI*180
             }
+        } else {
+            e.value = 1000000.0
+            edeg.value = 361.0
         }
     }
 }

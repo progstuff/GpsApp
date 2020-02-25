@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.location.GnssNavigationMessage
 import android.location.GnssStatus
 import android.location.Location
@@ -168,19 +169,34 @@ class GpsFragment: Fragment(){
         }
 
         val azObserver = Observer<Double>{data ->
-            az.text = "%.2f".format(data).replace(",",".")
+            if(data != 361.0)
+                az.text = "%.2f".format(data).replace(",",".")
+            else
+                az.text = getString(R.string.wait)
         }
         val iazObserver = Observer<Double>{data ->
-            iaz.text = "%.2f".format(data).replace(",",".")
+            if(data != 361.0)
+                iaz.text = "%.2f".format(data).replace(",",".")
+            else
+                iaz.text = getString(R.string.wait)
         }
         val distObserver = Observer<Double>{data ->
-            dist.text = "%.2f".format(data).replace(",",".")
+            if(data != -1.0)
+                dist.text = "%.2f".format(data).replace(",",".")
+            else
+                dist.text = getString(R.string.wait)
         }
         val eObserver = Observer<Double>{data ->
-            e.text = "%.2f".format(data).replace(",",".")
+            if(data != 1000000.0)
+                e.text = "%.2f".format(data).replace(",",".")
+            else
+                e.text = getString(R.string.wait)
         }
         val eDegObserver = Observer<Double>{data ->
-            edeg.text = "%.2f".format(data).replace(",",".")
+            if(data != 361.0)
+                edeg.text = "%.2f".format(data).replace(",",".")
+            else
+                edeg.text = getString(R.string.wait)
         }
         gpsViewModel.pointA.observe(viewLifecycleOwner, pointAObserver)
         gpsViewModel.pointB.observe(viewLifecycleOwner, pointBObserver)
