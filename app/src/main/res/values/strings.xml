@@ -10,4 +10,8 @@
     <string name="wait">"???"</string>
     <string name="elev">Превышение</string>
     <string name="elev_deg">Превышение град</string>
+    <string name="gps_data">Показания GPS</string>
+    <string name="calculated_data">Расчётные показатели</string>
+    <string name="pointA">Координаты точки А</string>
+    <string name="pointB">Координаты точки Б</string>
 </resources>

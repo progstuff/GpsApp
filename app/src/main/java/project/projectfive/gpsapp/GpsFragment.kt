@@ -251,7 +251,7 @@ class GpsFragment: Fragment(){
         val date: Date = Calendar.getInstance().time
         val sdf = SimpleDateFormat("hh:mm:ss a")
         txtTime.text = "" + sdf.format(date)
-        
+
         txtLat.text = "%.7f".format(mLastLocation.latitude).replace(",",".")
         txtLong.text = "%.7f".format(mLastLocation.longitude).replace(",",".")
         txtAlt.text = "%.2f".format(mLastLocation.altitude).replace(",",".")
