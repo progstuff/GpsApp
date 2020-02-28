@@ -1,11 +1,12 @@
 package project.projectfive.gpsapp
 
+import project.projectfive.gpsapp.db.LocationData
 import kotlin.math.PI
 import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.sqrt
 
-data class DataByLocations(var pointA:LocationData, var pointB:LocationData) {
+data class DataByLocations(var pointA: LocationData, var pointB: LocationData) {
     var distance = -1.0
 
     fun calculateDistance(){

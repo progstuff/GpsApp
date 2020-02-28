@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
-import android.location.GnssNavigationMessage
 import android.location.GnssStatus
 import android.location.Location
 
@@ -24,14 +22,11 @@ import android.widget.Toast
 import com.google.android.gms.location.*
 import android.provider.Settings
 import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.button.MaterialButton
+import project.projectfive.gpsapp.db.LocationData
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -153,14 +148,14 @@ class GpsFragment: Fragment(){
     }
 
     private fun updateUI(){
-        val pointAObserver = Observer<LocationData>{data ->
+        val pointAObserver = Observer<LocationData>{ data ->
             if(data.isExist) {
                 aLat.text = "%.7f".format(data.lat).replace(",", ".")
                 aLon.text = "%.7f".format(data.lon).replace(",", ".")
                 aAlt.text = "%.2f".format(data.alt).replace(",", ".")
             }
         }
-        val pointBObserver = Observer<LocationData>{data ->
+        val pointBObserver = Observer<LocationData>{ data ->
             if(data.isExist) {
                 bLat.text = "%.7f".format(data.lat).replace(",", ".")
                 bLon.text = "%.7f".format(data.lon).replace(",", ".")

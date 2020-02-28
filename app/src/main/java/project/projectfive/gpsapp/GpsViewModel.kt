@@ -2,6 +2,7 @@ package project.projectfive.gpsapp
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import project.projectfive.gpsapp.db.LocationData
 import java.lang.Math.*
 import kotlin.math.PI
 import kotlin.math.asin
@@ -20,13 +21,15 @@ class GpsViewModel: ViewModel() {
     var edeg = MutableLiveData<Double>()
 
     init {
-        val data = LocationData(0.0,0.0,0.0, false)
+        val data =
+            LocationData(0.0, 0.0, 0.0, false)
         pointA.value = data
         pointB.value = data
     }
 
     fun setPointA(lat:Double, lon:Double, alt:Double){
-        val data = LocationData(lat,lon,alt, true)
+        val data =
+            LocationData(lat, lon, alt, true)
         pointA.value = data
         updateAz()
         updateDistance()
@@ -34,7 +37,8 @@ class GpsViewModel: ViewModel() {
     }
 
     fun setPointB(lat:Double, lon:Double, alt:Double){
-        val data = LocationData(lat,lon,alt, true)
+        val data =
+            LocationData(lat, lon, alt, true)
         pointB.value = data
         updateAz()
         updateDistance()
