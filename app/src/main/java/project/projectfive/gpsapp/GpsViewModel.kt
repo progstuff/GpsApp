@@ -1,8 +1,13 @@
 package project.projectfive.gpsapp
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import project.projectfive.gpsapp.db.LocationData
+import project.projectfive.gpsapp.db.LocationDataRepository
+import project.projectfive.gpsapp.db.LocationsDataBase
 import java.lang.Math.*
 import kotlin.math.PI
 import kotlin.math.asin
@@ -10,26 +15,46 @@ import kotlin.math.cos
 import kotlin.math.sqrt
 
 
-class GpsViewModel: ViewModel() {
-    val pointA = MutableLiveData<LocationData>()
-    val pointB = MutableLiveData<LocationData>()
-    //val calculatedData = MutableLiveData<LocationData>()
+class GpsViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository:LocationDataRepository
+
+    lateinit var pointAFromDb:LiveData<LocationData>
+    lateinit var pointBFromDb:LiveData<LocationData>
+
+    var pointA = MutableLiveData<LocationData>()
+    var pointB = MutableLiveData<LocationData>()
     var az = MutableLiveData<Double>()
     var iaz = MutableLiveData<Double>()
     var distance = MutableLiveData<Double>()
     var e = MutableLiveData<Double>()
     var edeg = MutableLiveData<Double>()
+    lateinit var locs:List<LocationData>
 
     init {
-        val data =
-            LocationData(0.0, 0.0, 0.0, false)
-        pointA.value = data
-        pointB.value = data
+        val locDao = LocationsDataBase.getDatabase(application,viewModelScope).locationDataDao()
+        repository = LocationDataRepository(locDao)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insert(LocationData(0.0,0.0,0.0,true,"pointA"))
+            repository.insert(LocationData(0.0,0.0,0.0,true,"pointB"))
+            pointAFromDb = repository.getPointA()
+            pointBFromDb = repository.getPointB()
+
+//            pointA.value = pointAFromDb.value
+//            pointB.value = pointBFromDb.value
+        }
+        /*val data =
+            LocationData(0,0.0, 0.0, 0.0, true)*/
     }
 
     fun setPointA(lat:Double, lon:Double, alt:Double){
         val data =
-            LocationData(lat, lon, alt, true)
+            LocationData(lat, lon, alt, true,"p")
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insert(data)
+            //delay(2000)
+            val rez = repository.locationDao.getAll()
+        }
+        val d = pointAFromDb.value
         pointA.value = data
         updateAz()
         updateDistance()
@@ -38,7 +63,7 @@ class GpsViewModel: ViewModel() {
 
     fun setPointB(lat:Double, lon:Double, alt:Double){
         val data =
-            LocationData(lat, lon, alt, true)
+            LocationData(lat, lon, alt, true, "p")
         pointB.value = data
         updateAz()
         updateDistance()

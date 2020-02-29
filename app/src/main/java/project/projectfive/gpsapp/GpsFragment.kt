@@ -24,6 +24,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.button.MaterialButton
 import project.projectfive.gpsapp.db.LocationData
@@ -67,6 +68,11 @@ class GpsFragment: Fragment(){
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        gpsViewModel = ViewModelProvider(this).get(GpsViewModel::class.java)
+    }
+
     @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,7 +80,8 @@ class GpsFragment: Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.gps_layout, container, false)
-        gpsViewModel = ViewModelProviders.of(this).get(GpsViewModel::class.java)
+
+
         mLocationRequest = LocationRequest()
 
 

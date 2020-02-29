@@ -11,9 +11,15 @@ interface LocationDataDao {
     @Insert
     fun insert(point: LocationData)
 
-    @Query("SELECT * FROM LocationData WHERE id = 0")
+    @Query("SELECT * FROM LocationData WHERE pointName = 'pointA'")
     fun getCurrentPointA():LiveData<LocationData>
 
-    @Query("SELECT * FROM LocationData WHERE id = 1")
+    @Query("SELECT * FROM LocationData WHERE pointName = 'pointB'")
     fun getCurrentPointB():LiveData<LocationData>
+
+    @Query("DELETE FROM LocationData")
+    fun deleteAll()
+
+    @Query("Select * FROM LocationData")
+    fun getAll():List<LocationData>
 }

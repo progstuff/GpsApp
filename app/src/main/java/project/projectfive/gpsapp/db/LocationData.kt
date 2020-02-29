@@ -5,10 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class LocationData(
-                        @PrimaryKey(autoGenerate = true)
-                        var id:Int,
+
                         var lat:Double,
                         var lon:Double,
                         var alt:Double,
-                        var isExist:Boolean) {
+                        var isExist:Boolean,
+                        var pointName:String,
+                        @PrimaryKey(autoGenerate = true)
+                        var id:Int = 0) {
 }
