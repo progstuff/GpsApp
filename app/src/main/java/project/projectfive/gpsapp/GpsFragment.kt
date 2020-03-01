@@ -104,7 +104,7 @@ class GpsFragment: Fragment(){
                     override fun onSatelliteStatusChanged(status: GnssStatus?) {
                         super.onSatelliteStatusChanged(status)
                         satelite.text = status?.satelliteCount.toString()
-                        Log.d("GPS","GPS DATA")
+                        //Log.d("GPS","GPS DATA")
                     }
                 })
             } else {
@@ -160,6 +160,7 @@ class GpsFragment: Fragment(){
                 aLat.text = "%.7f".format(data.lat).replace(",", ".")
                 aLon.text = "%.7f".format(data.lon).replace(",", ".")
                 aAlt.text = "%.2f".format(data.alt).replace(",", ".")
+                gpsViewModel.updateCalculatedData()
             }
         }
         val pointBObserver = Observer<LocationData>{ data ->
@@ -167,6 +168,7 @@ class GpsFragment: Fragment(){
                 bLat.text = "%.7f".format(data.lat).replace(",", ".")
                 bLon.text = "%.7f".format(data.lon).replace(",", ".")
                 bAlt.text = "%.2f".format(data.alt).replace(",", ".")
+                gpsViewModel.updateCalculatedData()
             }
         }
 
@@ -200,8 +202,10 @@ class GpsFragment: Fragment(){
             else
                 edeg.text = getString(R.string.wait)
         }
-        gpsViewModel.pointA.observe(viewLifecycleOwner, pointAObserver)
-        gpsViewModel.pointB.observe(viewLifecycleOwner, pointBObserver)
+        //gpsViewModel.pointA.observe(viewLifecycleOwner, pointAObserver)
+        //gpsViewModel.pointB.observe(viewLifecycleOwner, pointBObserver)
+        gpsViewModel.getAPoint().observe(viewLifecycleOwner, pointAObserver)
+        gpsViewModel.getBPoint().observe(viewLifecycleOwner, pointBObserver)
         gpsViewModel.az.observe(viewLifecycleOwner,azObserver)
         gpsViewModel.iaz.observe(viewLifecycleOwner,iazObserver)
         gpsViewModel.distance.observe(viewLifecycleOwner,distObserver)

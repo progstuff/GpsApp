@@ -18,56 +18,77 @@ import kotlin.math.sqrt
 class GpsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository:LocationDataRepository
 
-    lateinit var pointAFromDb:LiveData<LocationData>
-    lateinit var pointBFromDb:LiveData<LocationData>
+    lateinit var pointA:LiveData<LocationData>
+    lateinit var pointB:LiveData<LocationData>
 
-    var pointA = MutableLiveData<LocationData>()
-    var pointB = MutableLiveData<LocationData>()
     var az = MutableLiveData<Double>()
     var iaz = MutableLiveData<Double>()
     var distance = MutableLiveData<Double>()
     var e = MutableLiveData<Double>()
     var edeg = MutableLiveData<Double>()
-    lateinit var locs:List<LocationData>
-
+    lateinit var locs:LiveData<List<LocationData>>
+    var isLoadedA:Boolean = false
+    var isLoadedB:Boolean = false
     init {
-        val locDao = LocationsDataBase.getDatabase(application,viewModelScope).locationDataDao()
-        repository = LocationDataRepository(locDao)
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.insert(LocationData(0.0,0.0,0.0,true,"pointA"))
-            repository.insert(LocationData(0.0,0.0,0.0,true,"pointB"))
-            pointAFromDb = repository.getPointA()
-            pointBFromDb = repository.getPointB()
+        repository = LocationDataRepository.getInstance(application, viewModelScope)
 
-//            pointA.value = pointAFromDb.value
-//            pointB.value = pointBFromDb.value
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.test()
         }
-        /*val data =
-            LocationData(0,0.0, 0.0, 0.0, true)*/
+    }
+
+    fun getAPoint():LiveData<LocationData>{
+        if(isLoadedA)
+            return pointA
+        else {
+            isLoadedA = true
+            pointA = repository.getPointA()
+            return pointA
+        }
+    }
+    fun getBPoint():LiveData<LocationData>{
+        if(isLoadedB)
+            return pointB
+        else {
+            isLoadedB = true
+            pointB = repository.getPointB()
+            return pointB
+        }
+    }
+
+    fun updateCalculatedData(){
+        updateAz()
+        updateDistance()
+        updateElev()
     }
 
     fun setPointA(lat:Double, lon:Double, alt:Double){
-        val data =
-            LocationData(lat, lon, alt, true,"p")
+
+        val v = pointA.value
+
+        v?.lat = lat
+        v?.lon = lon
+        v?.alt = alt
+
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insert(data)
-            //delay(2000)
-            val rez = repository.locationDao.getAll()
+            repository.update(v as LocationData)
         }
-        val d = pointAFromDb.value
-        pointA.value = data
-        updateAz()
-        updateDistance()
-        updateElev()
+        updateCalculatedData()
     }
 
     fun setPointB(lat:Double, lon:Double, alt:Double){
-        val data =
-            LocationData(lat, lon, alt, true, "p")
-        pointB.value = data
-        updateAz()
-        updateDistance()
-        updateElev()
+        val v = pointB.value
+
+        v?.lat = lat
+        v?.lon = lon
+        v?.alt = alt
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.update(v as LocationData)
+        }
+
+
+        updateCalculatedData()
     }
 
     fun updateAz(){
