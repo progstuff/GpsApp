@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(LocationData::class), version = 1)
+@Database(entities = arrayOf(LocationData::class, LocationChain::class), version = 1)
 abstract class LocationsDataBase: RoomDatabase() {
     companion object{
         private var INSTANCE: LocationsDataBase? = null

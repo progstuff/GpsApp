@@ -1,10 +1,12 @@
 package project.projectfive.gpsapp
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import project.projectfive.gpsapp.db.LocationChain
 import project.projectfive.gpsapp.db.LocationData
 import project.projectfive.gpsapp.db.LocationDataRepository
 import project.projectfive.gpsapp.db.LocationsDataBase
@@ -156,4 +158,30 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
             edeg.value = 361.0
         }
     }
+
+    fun saveChainPoints(){
+        if(pointA.value?.isExist == true) {
+            if (pointB.value?.isExist == true) {
+                val ida = pointA.value?.id  ?: -1L
+                val idb = pointA.value?.id  ?: -1L
+                if(ida != -1L && idb != -1L ) {
+                    var lat = pointA.value?.lat ?: -1
+                    var lon = pointA.value?.lat ?: -1
+                    var alt = pointA.value?.lat ?: -1
+                    val a = LocationData(lat as Double, lon as Double, alt as Double, true, "p")
+
+                    lat = pointB.value?.lat ?: -1
+                    lon = pointB.value?.lat ?: -1
+                    alt = pointB.value?.lat ?: -1
+                    val b = LocationData(lat as Double, lon as Double, alt as Double, true, "p")
+                    Log.d("TEST_DATA","1")
+                    viewModelScope.launch (Dispatchers.IO){
+                        repository.insertChain(a,b)
+                    }
+
+                }
+            }
+        }
+    }
+
 }

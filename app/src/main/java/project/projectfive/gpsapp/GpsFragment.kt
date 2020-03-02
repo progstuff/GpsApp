@@ -70,7 +70,7 @@ class GpsFragment: Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gpsViewModel = ViewModelProvider(this).get(GpsViewModel::class.java)
+        gpsViewModel = ViewModelProvider(activity as MainActivity).get(GpsViewModel::class.java)
     }
 
     @SuppressLint("MissingPermission")
@@ -312,6 +312,7 @@ class GpsFragment: Fragment(){
             true
         }
     }
+
 
 
 }

@@ -7,7 +7,7 @@ import project.projectfive.gpsapp.db.LocationData
 @Dao
 interface LocationDataDao {
     @Insert
-    fun insert(point: LocationData)
+    fun insert(point: LocationData):Long
 
     @Query("SELECT * FROM LocationData WHERE name = 'pointA'")
     fun getCurrentPointA():LiveData<LocationData>
@@ -35,5 +35,16 @@ interface LocationDataDao {
         insert(LocationData(0.0,0.0,0.0,false,"t"))
         val r = getTest()
         delete(r)
+    }
+
+    @Insert
+    fun insertChain(locationChain:LocationChain)
+
+    @Transaction
+    fun insertChainAndPoints(pointA:LocationData, pointB:LocationData){
+        val idA = insert(pointA)
+        val idB = insert(pointB)
+        val chain = LocationChain(idA,idB)
+        insertChain(chain)
     }
 }

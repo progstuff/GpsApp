@@ -20,8 +20,8 @@ class LocationDataRepository (application: Application, scope:CoroutineScope){
         }
     }
 
-    fun insert(locationData: LocationData) {
-        locationDao.insert(locationData)
+    fun insertChain(pointA:LocationData, pointB:LocationData) {
+        locationDao.insertChainAndPoints(pointA, pointB)
     }
 
     fun test(){
