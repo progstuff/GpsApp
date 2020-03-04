@@ -40,11 +40,14 @@ interface LocationDataDao {
     @Insert
     fun insertChain(locationChain:LocationChain)
 
+    @Query("Select * FROM LocationChain")
+    fun getAllChains():LiveData<List<LocationChain>>
+
     @Transaction
-    fun insertChainAndPoints(pointA:LocationData, pointB:LocationData){
+    fun insertChainAndPoints(name:String, pointA:LocationData, pointB:LocationData){
         val idA = insert(pointA)
         val idB = insert(pointB)
-        val chain = LocationChain(idA,idB)
+        val chain = LocationChain(name, idA,idB)
         insertChain(chain)
     }
 }

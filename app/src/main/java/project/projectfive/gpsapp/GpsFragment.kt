@@ -156,7 +156,7 @@ class GpsFragment: Fragment(){
 
     private fun updateUI(){
         val pointAObserver = Observer<LocationData>{ data ->
-            if(data.isExist) {
+            if(data?.isExist == true) {
                 aLat.text = "%.7f".format(data.lat).replace(",", ".")
                 aLon.text = "%.7f".format(data.lon).replace(",", ".")
                 aAlt.text = "%.2f".format(data.alt).replace(",", ".")
@@ -164,7 +164,7 @@ class GpsFragment: Fragment(){
             }
         }
         val pointBObserver = Observer<LocationData>{ data ->
-            if(data.isExist) {
+            if(data?.isExist == true) {
                 bLat.text = "%.7f".format(data.lat).replace(",", ".")
                 bLon.text = "%.7f".format(data.lon).replace(",", ".")
                 bAlt.text = "%.2f".format(data.alt).replace(",", ".")

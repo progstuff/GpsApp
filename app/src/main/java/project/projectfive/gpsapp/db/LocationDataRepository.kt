@@ -20,8 +20,12 @@ class LocationDataRepository (application: Application, scope:CoroutineScope){
         }
     }
 
-    fun insertChain(pointA:LocationData, pointB:LocationData) {
-        locationDao.insertChainAndPoints(pointA, pointB)
+    fun insertChain(name:String, pointA:LocationData, pointB:LocationData) {
+        locationDao.insertChainAndPoints(name, pointA, pointB)
+    }
+
+    fun getAllChains():LiveData<List<LocationChain>>{
+        return locationDao.getAllChains()
     }
 
     fun test(){

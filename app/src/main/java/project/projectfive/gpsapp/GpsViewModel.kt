@@ -174,11 +174,10 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
                     lon = pointB.value?.lat ?: -1
                     alt = pointB.value?.lat ?: -1
                     val b = LocationData(lat as Double, lon as Double, alt as Double, true, "p")
-                    Log.d("TEST_DATA","1")
-                    viewModelScope.launch (Dispatchers.IO){
-                        repository.insertChain(a,b)
-                    }
 
+                    viewModelScope.launch (Dispatchers.IO){
+                        repository.insertChain("test", a,b)
+                    }
                 }
             }
         }

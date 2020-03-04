@@ -18,6 +18,7 @@ data class LocationData(
 
 @Entity
 data class LocationChain(
+    @ColumnInfo(name = "name")var name:String,
     @ColumnInfo(name = "lat")var idA:Long,
     @ColumnInfo(name = "lon")var idB:Long,
     @PrimaryKey(autoGenerate = true)var id:Long = 0
