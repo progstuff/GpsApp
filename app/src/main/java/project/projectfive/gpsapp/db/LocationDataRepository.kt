@@ -42,6 +42,9 @@ class LocationDataRepository (application: Application, scope:CoroutineScope){
     fun getPointB():LiveData<LocationData>{
         return locationDao.getCurrentPointB()
     }
+    fun getPoint(id:Long):LiveData<LocationData>{
+        return locationDao.getPoint(id)
+    }
 
     fun getAll():LiveData<List<LocationData>>{
         return locationDao.getAll()
