@@ -161,6 +161,7 @@ class GpsFragment: Fragment(){
                 aLon.text = "%.7f".format(data.lon).replace(",", ".")
                 aAlt.text = "%.2f".format(data.alt).replace(",", ".")
                 gpsViewModel.updateCalculatedData()
+                Log.d("TEST","2")
             }
         }
         val pointBObserver = Observer<LocationData>{ data ->

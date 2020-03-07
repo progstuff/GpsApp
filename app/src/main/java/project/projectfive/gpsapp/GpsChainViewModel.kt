@@ -13,8 +13,9 @@ import project.projectfive.gpsapp.db.LocationDataRepository
 class GpsChainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: LocationDataRepository
     lateinit var chains:LiveData<List<LocationChain>>
-    lateinit var pointOne:LiveData<LocationData>
-    lateinit var pointTwo:LiveData<LocationData>
+    lateinit var currentChain:LocationChain
+    lateinit var pointOne:LocationData
+    lateinit var pointTwo:LocationData
     var isLoaded = false
     init {
         repository = LocationDataRepository.getInstance(application, viewModelScope)
@@ -33,14 +34,25 @@ class GpsChainViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun getPointOne(id:Long):LiveData<LocationData>{
-        pointOne = repository.getPoint(id)
-        return pointOne
+    fun getOnePoint(){
+        pointOne = repository.getPoint(currentChain.idA)
+
     }
-    fun getPointTwo(id:Long):LiveData<LocationData>{
-        pointTwo = repository.getPoint(id)
-        return pointTwo
+
+    fun getTwoPoint(){
+        pointTwo = repository.getPoint(currentChain.idB)
     }
+
+    fun getCount():Int{
+        return chains.value?.size ?: 0
+    }
+
+    fun updateCurrentPoints(m:GpsViewModel){
+        m.setPointA(pointOne.lat,pointOne.lon,pointOne.alt)
+        m.setPointB(pointTwo.lat,pointTwo.lon,pointTwo.alt)
+    }
+
+
 
 
 }

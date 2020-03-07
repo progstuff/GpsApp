@@ -75,7 +75,7 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.update(v as LocationData)
         }
-        updateCalculatedData()
+        //updateCalculatedData()
     }
 
     fun setPointB(lat:Double, lon:Double, alt:Double){
@@ -88,9 +88,7 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.update(v as LocationData)
         }
-
-
-        updateCalculatedData()
+        //updateCalculatedData()
     }
 
     fun updateAz(){
@@ -159,7 +157,7 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun saveChainPoints(){
+    fun saveChainPoints(name:String){
         if(pointA.value?.isExist == true) {
             if (pointB.value?.isExist == true) {
                 val ida = pointA.value?.id  ?: -1L
@@ -176,7 +174,7 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
                     val b = LocationData(lat as Double, lon as Double, alt as Double, true, "p")
 
                     viewModelScope.launch (Dispatchers.IO){
-                        repository.insertChain("test", a,b)
+                        repository.insertChain(name, a,b)
                     }
                 }
             }
