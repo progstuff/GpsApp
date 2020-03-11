@@ -31,7 +31,13 @@ interface LocationDataDao {
     fun getAll():LiveData<List<LocationData>>
 
     @Delete
+    fun deleteChain(chain:LocationChain)
+
+    @Delete
     fun delete(tloc:LocationData)
+
+    @Query("DELETE FROM LocationData where id = :id")
+    fun deleteById(id:Long)
 
     @Transaction
     fun testDB(){
@@ -53,4 +59,14 @@ interface LocationDataDao {
         val chain = LocationChain(name, idA,idB)
         insertChain(chain)
     }
+    @Transaction
+    fun deleteChainWithPoints(chain:LocationChain){
+        val idA = chain.idA
+        val idB = chain.idB
+        deleteChain(chain)
+        deleteById(idA)
+        deleteById(idB)
+    }
+
+
 }

@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/baseline_save_black_18dp"
+        android:orderInCategory="1"
+        android:title="сохранить"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/link"
+        android:icon="@drawable/baseline_send_black_18dp"
+        android:orderInCategory="3"
         android:title="переслать"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/save"
-        android:title="сохранить"
+        android:id="@+id/delete"
+        android:icon="@drawable/baseline_delete_black_18dp"
+        android:orderInCategory="2"
+        android:title="удалить"
         app:showAsAction="ifRoom" />
+
 </menu>

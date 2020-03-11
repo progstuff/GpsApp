@@ -9,10 +9,12 @@ import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var gpsViewModel:GpsViewModel
     lateinit var  gpsChainViewModel:GpsChainViewModel
     lateinit var nv:NavigationView
+    lateinit var dl:DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
         nv = findViewById(R.id.navigation)
-
+        dl = findViewById(R.id.dl)
         val pointOneObserver = Observer<LocationData>{ data ->
             if(data != null) {
                 //gpsViewModel.setPointA(data.lat, data.lon, data.alt)
@@ -58,23 +61,20 @@ class MainActivity : AppCompatActivity() {
             nv.menu.clear()
             for(d in data){
                 nv.menu.add("${d.name}")
+
                 nv.menu.get(nv.menu.size()-1).setOnMenuItemClickListener {
                     Log.d("ITEM", d.name)
-                    gpsChainViewModel.currentChain = d
-                    val job = GlobalScope.launch(Dispatchers.IO) {
-                        gpsChainViewModel.getOnePoint()
-                        gpsChainViewModel.getTwoPoint()
-                    }
-                    job.invokeOnCompletion {
-                        Log.d("ITEM", "completed")
-                        gpsChainViewModel.updateCurrentPoints(gpsViewModel)
-                    }
+                    supportActionBar?.title = d.name
+                    gpsChainViewModel.setCurChain(d,gpsViewModel)
                     true
                 }
             }
         }
 
         gpsChainViewModel.getChainsLiveData().observe(this, chainsObserver)
+        supportActionBar?.title = "ПЫНЯГА"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_dehaze_black_18dp);
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,7 +87,19 @@ class MainActivity : AppCompatActivity() {
             R.id.save ->{
                 gpsViewModel.saveChainPoints("${gpsChainViewModel.getCount() + 1}")
             }
-            R.id.link ->  Log.d("TEST_DATA","2")
+            R.id.link ->{
+
+            }
+            R.id.delete -> {
+                gpsChainViewModel.deleteCurrentChain(gpsViewModel, supportActionBar)
+            }
+            else -> {
+                if(dl.isDrawerOpen(Gravity.LEFT))
+                    dl.closeDrawer(Gravity.LEFT)
+                else
+                    dl.openDrawer(Gravity.LEFT)
+            }
+            //R.id.link ->  Log.d("TEST_DATA","2")
         }
 
         /*if(item.itemId == R.id.save)

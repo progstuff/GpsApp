@@ -46,9 +46,13 @@ class LocationDataRepository (application: Application, scope:CoroutineScope){
         return locationDao.getPoint(id)
     }
 
+    fun deleteChain(chain:LocationChain){
+        locationDao.deleteChain(chain)
+    }
     fun getAll():LiveData<List<LocationData>>{
         return locationDao.getAll()
     }
+
 
 
 
