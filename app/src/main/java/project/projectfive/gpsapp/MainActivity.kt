@@ -12,11 +12,17 @@ import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
+import android.widget.TextView
+
+
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -66,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("ITEM", d.name)
                     supportActionBar?.title = d.name
                     gpsChainViewModel.setCurChain(d,gpsViewModel)
+                    dl.closeDrawer(Gravity.LEFT)
                     true
                 }
             }
@@ -91,7 +98,28 @@ class MainActivity : AppCompatActivity() {
 
             }
             R.id.delete -> {
-                gpsChainViewModel.deleteCurrentChain(gpsViewModel, supportActionBar)
+                val s = gpsChainViewModel.getCurrentChainName()
+                if(!s.equals("")) {
+                    val builder = MaterialAlertDialogBuilder(this)
+                    val dialogLayout = layoutInflater.inflate(R.layout.delete_dialog, null)
+                    builder.setView(dialogLayout)
+                    val alert = builder.create()
+                    alert.show()
+                    val t = dialogLayout.findViewById<TextView>(R.id.name)
+                    t.text = s + " ?"
+
+                    val ok = dialogLayout.findViewById<MaterialButton>(R.id.ok)
+                    ok.setOnClickListener {
+                        supportActionBar?.title = gpsChainViewModel.getNextChainName()
+                        gpsChainViewModel.deleteCurrentChain(gpsViewModel, supportActionBar)
+                        alert.dismiss()
+                    }
+                    val cancel = dialogLayout.findViewById<MaterialButton>(R.id.cancel)
+                    cancel.setOnClickListener{
+                        alert.dismiss()
+                    }
+                }
+
             }
             else -> {
                 if(dl.isDrawerOpen(Gravity.LEFT))

@@ -15,4 +15,6 @@
     <string name="pointA">Координаты точки А</string>
     <string name="pointB">Координаты точки Б</string>
     <string name="memory">Запомнить</string>
+    <string name="okd">Удалить</string>
+    <string name="canceld">Отмена</string>
 </resources>

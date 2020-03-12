@@ -164,13 +164,13 @@ class GpsViewModel(application: Application) : AndroidViewModel(application) {
                 val idb = pointA.value?.id  ?: -1L
                 if(ida != -1L && idb != -1L ) {
                     var lat = pointA.value?.lat ?: -1
-                    var lon = pointA.value?.lat ?: -1
-                    var alt = pointA.value?.lat ?: -1
+                    var lon = pointA.value?.lon ?: -1
+                    var alt = pointA.value?.alt ?: -1
                     val a = LocationData(lat as Double, lon as Double, alt as Double, true, "p")
 
                     lat = pointB.value?.lat ?: -1
-                    lon = pointB.value?.lat ?: -1
-                    alt = pointB.value?.lat ?: -1
+                    lon = pointB.value?.lon ?: -1
+                    alt = pointB.value?.alt ?: -1
                     val b = LocationData(lat as Double, lon as Double, alt as Double, true, "p")
 
                     viewModelScope.launch (Dispatchers.IO){

@@ -32,6 +32,10 @@
         <item name="android:textColor">@color/colorMenuTitle</item>
     </style>
 
+    <style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
 
 
 </resources>

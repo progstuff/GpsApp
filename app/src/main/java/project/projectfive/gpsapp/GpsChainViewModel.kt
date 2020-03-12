@@ -71,6 +71,29 @@ class GpsChainViewModel(application: Application) : AndroidViewModel(application
         m.setPointB(pointTwo.lat,pointTwo.lon,pointTwo.alt)
     }
 
+    fun getCurrentChainName():String{
+        if(isChainLoaded) {
+            return currentChain.name
+        }
+        return ""
+    }
+
+    fun getNextChainName():String{
+        if(isChainLoaded) {
+            val ch = chains.value
+            var ind = -1
+            ch?.forEachIndexed {index, element ->
+                if(element.id == currentChain.id) ind = index
+            }
+            var ch2 = LocationChain("",0,0)
+            if(ind > -1){
+                if(ind < ((ch?.size?.minus(1)) as Int)){
+                    return ch.get(ind+1).name
+                }
+            }
+        }
+        return ""
+    }
     fun deleteCurrentChain(gpsViewModel:GpsViewModel, supportActionBar: ActionBar?){
         if(isChainLoaded) {
             val job = viewModelScope.launch(Dispatchers.IO) {
