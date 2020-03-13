@@ -1,32 +1,25 @@
 package project.projectfive.gpsapp
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.LocationManager
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.WindowManager
+import android.util.TypedValue
+import android.view.*
+import android.widget.LinearLayout
 import android.widget.TextView
 
-
-import androidx.core.app.ActivityCompat
 import androidx.core.view.get
+import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 import project.projectfive.gpsapp.db.LocationChain
 import project.projectfive.gpsapp.db.LocationData
 
@@ -49,18 +42,6 @@ class MainActivity : AppCompatActivity() {
         }
         nv = findViewById(R.id.navigation)
         dl = findViewById(R.id.dl)
-        val pointOneObserver = Observer<LocationData>{ data ->
-            if(data != null) {
-                //gpsViewModel.setPointA(data.lat, data.lon, data.alt)
-                Log.d("TEST","1")
-            }
-        }
-        val pointTwoObserver = Observer<LocationData>{ data ->
-            if(data != null){
-                //gpsViewModel.setPointB(data.lat, data.lon, data.alt)
-            }
-
-        }
 
         val chainsObserver = Observer<List<LocationChain>>{data ->
             Log.d("CHAINS","" + data.size)
@@ -79,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         gpsChainViewModel.getChainsLiveData().observe(this, chainsObserver)
-        supportActionBar?.title = "ПЫНЯГА"
+        supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_dehaze_black_18dp);
     }
@@ -93,6 +74,36 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.save ->{
                 gpsViewModel.saveChainPoints("${gpsChainViewModel.getCount() + 1}")
+                val builder = MaterialAlertDialogBuilder(this)
+                val dialogLayout = layoutInflater.inflate(R.layout.add_dialog, null)
+                builder.setView(dialogLayout)
+                val alert = builder.create()
+
+                val ch1 = dialogLayout.findViewById<MaterialCheckBox>(R.id.ch1)
+                val ch2 = dialogLayout.findViewById<MaterialCheckBox>(R.id.ch2)
+                val s = dialogLayout.findViewById<MaterialButton>(R.id.save)
+                ch1.setOnClickListener {
+                    ch2.isChecked = !ch1.isChecked
+                    s.text = getString(R.string.oks1)
+                }
+                ch2.setOnClickListener {
+                    ch1.isChecked = !ch2.isChecked
+                    s.text = getString(R.string.oks2)
+                }
+                val rv = dialogLayout.findViewById<RecyclerView>(R.id.rv)
+                val adapter = RecViewAdapter()
+                val lm = LinearLayoutManager(this)
+                lm.orientation = LinearLayoutManager.VERTICAL
+                rv.layoutManager = lm
+                rv.adapter = adapter
+                adapter.data = gpsChainViewModel.chains.value as List<LocationChain>
+                val sc = dialogLayout.findViewById<NestedScrollView>(R.id.sc)
+                val p = sc.layoutParams
+                val scale = this.getResources().getDisplayMetrics().density;
+                val dps = 52*adapter.itemCount
+                p.height = (dps * scale + 0.5f).toInt();
+                sc.layoutParams = p
+                alert.show()
             }
             R.id.link ->{
 
@@ -127,24 +138,29 @@ class MainActivity : AppCompatActivity() {
                 else
                     dl.openDrawer(Gravity.LEFT)
             }
-            //R.id.link ->  Log.d("TEST_DATA","2")
         }
-
-        /*if(item.itemId == R.id.save)
-            Log.d("TEST_DATA","1")
-        if(item.itemId == R.id.link)
-            Log.d("TEST_DATA","2")*/
 
         return super.onOptionsItemSelected(item)
     }
 
+    class RecViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        lateinit var data:List<LocationChain>
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            val item = LayoutInflater.from(parent.context).inflate(R.layout.rv_element, parent, false)
+            return RecViewHolder(item)
+        }
 
+        override fun getItemCount(): Int {
+            return data.size;
+        }
 
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
+        }
 
+    }
+    class RecViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
 
-
-
-
+    }
 
 }

@@ -17,4 +17,10 @@
     <string name="memory">Запомнить</string>
     <string name="okd">Удалить</string>
     <string name="canceld">Отмена</string>
+    <string name="save_title">Сохранить местоположение</string>
+    <string name="chs1">Сохранить как новое</string>
+    <string name="chs2">Обновить существующее</string>
+    <string name="oks1">Сохранить</string>
+    <string name="oks2">Обновить</string>
+    <string name="cancels">Отмена</string>
 </resources>

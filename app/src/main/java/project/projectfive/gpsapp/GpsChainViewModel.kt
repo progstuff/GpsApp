@@ -94,6 +94,8 @@ class GpsChainViewModel(application: Application) : AndroidViewModel(application
         }
         return ""
     }
+
+
     fun deleteCurrentChain(gpsViewModel:GpsViewModel, supportActionBar: ActionBar?){
         if(isChainLoaded) {
             val job = viewModelScope.launch(Dispatchers.IO) {
