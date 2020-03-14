@@ -62,8 +62,28 @@ class GpsChainViewModel(application: Application) : AndroidViewModel(application
         pointTwo = repository.getPoint(currentChain.idB)
     }
 
-    fun getCount():Int{
-        return chains.value?.size ?: 0
+    fun getChainNewNameNumber():String{
+        if(isLoaded){
+            if(chains.value?.size ?: 0 == 0){
+                return "1"
+            } else {
+                val ch = chains.value as List<LocationChain>
+                var s = "${ch.size.plus(1)}"
+                var finded = false
+                while (!finded) {
+                    finded = true
+                    ch.forEachIndexed { index, locationChain ->
+                        if (locationChain.name.indexOf(s) > 0) {
+                            s = "{s.toInt() + 1}"
+                            finded = false
+                        }
+                    }
+                }
+                return s
+            }
+        }
+        return ""
+
     }
 
     fun updateCurrentPoints(m:GpsViewModel){

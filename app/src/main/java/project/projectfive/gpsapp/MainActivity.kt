@@ -2,9 +2,11 @@ package project.projectfive.gpsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         gpsChainViewModel.getChainsLiveData().observe(this, chainsObserver)
-        supportActionBar?.title = ""
+        supportActionBar?.title = gpsChainViewModel.getCurrentChainName()
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_dehaze_black_18dp);
     }
@@ -73,36 +75,76 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.save ->{
-                gpsViewModel.saveChainPoints("${gpsChainViewModel.getCount() + 1}")
+
                 val builder = MaterialAlertDialogBuilder(this)
                 val dialogLayout = layoutInflater.inflate(R.layout.add_dialog, null)
                 builder.setView(dialogLayout)
                 val alert = builder.create()
 
+
+
                 val ch1 = dialogLayout.findViewById<MaterialCheckBox>(R.id.ch1)
                 val ch2 = dialogLayout.findViewById<MaterialCheckBox>(R.id.ch2)
+                val locName = dialogLayout.findViewById<EditText>(R.id.name)
                 val s = dialogLayout.findViewById<MaterialButton>(R.id.save)
+                val rv = dialogLayout.findViewById<RecyclerView>(R.id.rv)
+                val adapter = RecViewAdapter()
+                val sc = dialogLayout.findViewById<NestedScrollView>(R.id.sc)
+
                 ch1.setOnClickListener {
                     ch2.isChecked = !ch1.isChecked
-                    s.text = getString(R.string.oks1)
+                    if(ch2.isChecked)
+                        s.text = getString(R.string.oks2)
+                    else
+                        s.text = getString(R.string.oks1)
+                    locName.isEnabled = ch1.isChecked
+                    adapter.isEnabled = ch2.isChecked
+                    sc.isEnabled = ch2.isChecked
+                    adapter.notifyDataSetChanged()
                 }
                 ch2.setOnClickListener {
                     ch1.isChecked = !ch2.isChecked
-                    s.text = getString(R.string.oks2)
+                    if(ch2.isChecked)
+                        s.text = getString(R.string.oks2)
+                    else
+                        s.text = getString(R.string.oks1)
+                    locName.isEnabled = ch1.isChecked
+                    adapter.isEnabled = ch2.isChecked
+                    sc.isEnabled = ch2.isChecked
+                    adapter.notifyDataSetChanged()
                 }
-                val rv = dialogLayout.findViewById<RecyclerView>(R.id.rv)
-                val adapter = RecViewAdapter()
+                val save = dialogLayout.findViewById<MaterialButton>(R.id.save)
+                save.setOnClickListener {
+                    gpsViewModel.saveChainPoints(locName.text.toString())
+                    alert.dismiss()
+                }
+                val cancel = dialogLayout.findViewById<MaterialButton>(R.id.cancel)
+                cancel.setOnClickListener {
+                    alert.dismiss()
+                }
+
                 val lm = LinearLayoutManager(this)
                 lm.orientation = LinearLayoutManager.VERTICAL
                 rv.layoutManager = lm
                 rv.adapter = adapter
                 adapter.data = gpsChainViewModel.chains.value as List<LocationChain>
-                val sc = dialogLayout.findViewById<NestedScrollView>(R.id.sc)
+
                 val p = sc.layoutParams
                 val scale = this.getResources().getDisplayMetrics().density;
-                val dps = 52*adapter.itemCount
+                var dps = 56
+                if(adapter.itemCount < 4){
+                    dps *= adapter.itemCount
+                } else {
+                    dps *= 3
+                }
                 p.height = (dps * scale + 0.5f).toInt();
                 sc.layoutParams = p
+                if(adapter.itemCount == 0){
+                    ch1.isEnabled = false
+                    ch2.isEnabled = false
+                }
+
+                locName.setText(getString(R.string.new_loc) + " " + gpsChainViewModel.getChainNewNameNumber(),TextView.BufferType.EDITABLE)
                 alert.show()
             }
             R.id.link ->{
@@ -145,6 +187,7 @@ class MainActivity : AppCompatActivity() {
 
     class RecViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         lateinit var data:List<LocationChain>
+        var isEnabled = false
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val item = LayoutInflater.from(parent.context).inflate(R.layout.rv_element, parent, false)
             return RecViewHolder(item)
@@ -155,12 +198,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+            (holder as RecViewHolder).bind(data.get(position).name,isEnabled)
         }
+
 
     }
     class RecViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
+        val button = itemView.findViewById<MaterialButton>(R.id.button2)
 
+        init {
+            button.isEnabled = false
+        }
+
+        fun bind(name:String, isEnable:Boolean){
+            button.text = name
+            button.isEnabled = isEnable
+        }
     }
 
 }

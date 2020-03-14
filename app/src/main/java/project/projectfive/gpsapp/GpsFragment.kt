@@ -230,7 +230,6 @@ class GpsFragment: Fragment(){
         val alert: AlertDialog = builder.create()
         alert.show()
 
-
     }
 
 
