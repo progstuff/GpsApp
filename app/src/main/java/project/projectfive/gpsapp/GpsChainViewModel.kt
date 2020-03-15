@@ -74,7 +74,7 @@ class GpsChainViewModel(application: Application) : AndroidViewModel(application
                     finded = true
                     ch.forEachIndexed { index, locationChain ->
                         if (locationChain.name.indexOf(s) > 0) {
-                            s = "{s.toInt() + 1}"
+                            s = "${s.toInt() + 1}"
                             finded = false
                         }
                     }

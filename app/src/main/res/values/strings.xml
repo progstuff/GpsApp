@@ -17,11 +17,19 @@
     <string name="memory">Запомнить</string>
     <string name="okd">Удалить</string>
     <string name="canceld">Отмена</string>
-    <string name="save_title">Сохранить местоположение</string>
-    <string name="chs1">Сохранить как новое</string>
-    <string name="chs2">Обновить существующее</string>
+    <string name="save_title">Сохранить координаты</string>
+    <string name="chs1">Сохранить как новые</string>
+    <string name="chs2">Обновить существующие</string>
     <string name="oks1">Сохранить</string>
     <string name="oks2">Обновить</string>
     <string name="cancels">Отмена</string>
     <string name="new_loc">К-ты</string>
+    <string name="snack_copy">Скопировано в буфер обмена</string>
+    <string name="snack_save">Сохранено</string>
+    <string name="snack_delete">Удалено</string>
+    <string name="loc_question">Похоже геолокация отключена, включить?</string>
+    <string name="loc_yes">Да</string>
+    <string name="loc_no">Нет</string>
+    <string name="loc_acess_no">В доступе отказано</string>
+    <string name="left_menu_title">Сохраненные координаты</string>
 </resources>

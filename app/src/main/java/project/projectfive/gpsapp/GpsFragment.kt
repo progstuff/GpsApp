@@ -217,13 +217,13 @@ class GpsFragment: Fragment(){
     private fun buildAlertMessageNoGps() {
 
         val builder = AlertDialog.Builder(activity as MainActivity)
-        builder.setMessage("Похоже местоположение отключено, включить?")
+        builder.setMessage(getString(R.string.loc_question))
             .setCancelable(false)
-            .setPositiveButton("Да") { dialog, id ->
+            .setPositiveButton(getString(R.string.loc_yes)) { dialog, id ->
                 startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     , 11)
             }
-            .setNegativeButton("Нет") { dialog, id ->
+            .setNegativeButton(getString(R.string.loc_no)) { dialog, id ->
                 dialog.cancel()
                 activity?.finish()
             }
@@ -291,7 +291,7 @@ class GpsFragment: Fragment(){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates()
             } else {
-                Toast.makeText(activity, "В доступе отказано", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, getString(R.string.loc_acess_no), Toast.LENGTH_SHORT).show()
             }
         }
     }

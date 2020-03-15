@@ -1,5 +1,6 @@
 package project.projectfive.gpsapp
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -9,6 +10,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import androidx.core.view.get
 import androidx.core.widget.NestedScrollView
@@ -21,6 +23,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 
 import project.projectfive.gpsapp.db.LocationChain
 import project.projectfive.gpsapp.db.LocationData
@@ -30,9 +33,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var  gpsChainViewModel:GpsChainViewModel
     lateinit var nv:NavigationView
     lateinit var dl:DrawerLayout
+    lateinit var cl:CoordinatorLayout
+    lateinit var adapter:RecViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         gpsViewModel = ViewModelProvider(this).get(GpsViewModel::class.java)
         gpsChainViewModel = ViewModelProvider(this).get(GpsChainViewModel::class.java)
         var fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
@@ -44,15 +50,13 @@ class MainActivity : AppCompatActivity() {
         }
         nv = findViewById(R.id.navigation)
         dl = findViewById(R.id.dl)
-
+        cl = findViewById(R.id.cl)
         val chainsObserver = Observer<List<LocationChain>>{data ->
-            Log.d("CHAINS","" + data.size)
             nv.menu.clear()
             for(d in data){
                 nv.menu.add("${d.name}")
 
                 nv.menu.get(nv.menu.size()-1).setOnMenuItemClickListener {
-                    Log.d("ITEM", d.name)
                     supportActionBar?.title = d.name
                     gpsChainViewModel.setCurChain(d,gpsViewModel)
                     dl.closeDrawer(Gravity.LEFT)
@@ -88,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 val locName = dialogLayout.findViewById<EditText>(R.id.name)
                 val s = dialogLayout.findViewById<MaterialButton>(R.id.save)
                 val rv = dialogLayout.findViewById<RecyclerView>(R.id.rv)
-                val adapter = RecViewAdapter()
+                adapter = RecViewAdapter()
                 val sc = dialogLayout.findViewById<NestedScrollView>(R.id.sc)
 
                 ch1.setOnClickListener {
@@ -116,8 +120,10 @@ class MainActivity : AppCompatActivity() {
                 val save = dialogLayout.findViewById<MaterialButton>(R.id.save)
                 save.setOnClickListener {
                     gpsViewModel.saveChainPoints(locName.text.toString())
+                    Snackbar.make(cl, getString(R.string.snack_save) + " " + locName.text.toString(), Snackbar.LENGTH_SHORT).show()
                     alert.dismiss()
                 }
+
                 val cancel = dialogLayout.findViewById<MaterialButton>(R.id.cancel)
                 cancel.setOnClickListener {
                     alert.dismiss()
@@ -148,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                 alert.show()
             }
             R.id.link ->{
-
+                Snackbar.make(cl, getString(R.string.snack_copy), Snackbar.LENGTH_SHORT).show()
             }
             R.id.delete -> {
                 val s = gpsChainViewModel.getCurrentChainName()
@@ -163,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 
                     val ok = dialogLayout.findViewById<MaterialButton>(R.id.ok)
                     ok.setOnClickListener {
+                        Snackbar.make(cl, getString(R.string.snack_delete) + " " + supportActionBar?.title, Snackbar.LENGTH_SHORT).show()
                         supportActionBar?.title = gpsChainViewModel.getNextChainName()
                         gpsChainViewModel.deleteCurrentChain(gpsViewModel, supportActionBar)
                         alert.dismiss()
@@ -187,6 +194,10 @@ class MainActivity : AppCompatActivity() {
 
     class RecViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         lateinit var data:List<LocationChain>
+
+        fun chooseEl(id:Long){
+            
+        }
         var isEnabled = false
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val item = LayoutInflater.from(parent.context).inflate(R.layout.rv_element, parent, false)
@@ -204,15 +215,42 @@ class MainActivity : AppCompatActivity() {
 
     }
     class RecViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
-        val button = itemView.findViewById<MaterialButton>(R.id.button2)
-
+        val button = itemView.findViewById<TextView>(R.id.button2)
+        var isChoosed = false
         init {
             button.isEnabled = false
+            button.setOnClickListener {
+                isChoosed = !isChoosed
+                if(isChoosed) {
+                    button.setBackgroundColor(itemView.context.resources.getColor(R.color.colorPrimary))
+                    button.setTextColor(Color.WHITE)
+                } else {
+                    button.setBackgroundColor(Color.WHITE)
+                    button.setTextColor(itemView.context.resources.getColor(R.color.colorPrimary))
+                }
+            }
         }
 
         fun bind(name:String, isEnable:Boolean){
             button.text = name
             button.isEnabled = isEnable
+            if(isEnable) {
+                if(isChoosed) {
+                    button.setBackgroundColor(itemView.context.resources.getColor(R.color.colorPrimary))
+                    button.setTextColor(Color.WHITE)
+                } else {
+                    button.setBackgroundColor(Color.WHITE)
+                    button.setTextColor(itemView.context.resources.getColor(R.color.colorPrimary))
+                }
+            } else {
+                if(isChoosed) {
+                    button.setBackgroundColor(Color.GRAY)
+                    button.setTextColor(Color.WHITE)
+                } else {
+                    button.setBackgroundColor(Color.WHITE)
+                    button.setTextColor(Color.GRAY)
+                }
+            }
         }
     }
 

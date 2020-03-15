@@ -9,7 +9,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/link"
-        android:icon="@drawable/baseline_send_black_18dp"
+        android:icon="@drawable/baseline_file_copy_black_18dp"
         android:orderInCategory="3"
         android:title="переслать"
         app:showAsAction="ifRoom" />
